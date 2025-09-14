@@ -14,6 +14,10 @@ curl -L https://raw.githubusercontent.com/markuspeitl/linux-setup-scripts/master
 
 ## System bootstrapping from config file
 
+
+**-it** ... ask before doing stuff (interactive mode)
+
+
 Create partitions configured in bootstrap.yml and filesystems on a disk image file (under stages set `encrypted_single_disk_btrfs_arch`):
 ```sh
 sudo python3 bootstrap_system_disk.py bootstrap.yml partitions --set encrypted_single_disk_btrfs_arch --simulate simulated_disk.img --sim_size 10G --overwrite_sim
@@ -56,6 +60,7 @@ sudo python3 bootstrap_system_disk.py bootstrap.yml clean --clean_devices /dev/b
 - Nesting a btrfs filesystem inside a luks container
 - Creating btrfs subvolumes and persistently applying compression
 - Creating partitions and filesystems on sparse image files
+- TODO: btrfs raid and multi disk setups
 
 #### Mounting & unmounting -> preparing chroot environment
 
@@ -85,6 +90,8 @@ Examples (debian, ubuntu, .etc)
 - Desktop environment
 - Display manager and session initialization 
 - Updating/Installing/Removing packages
+- TODO generate fstab based on chroot config
+
 
 ## Backup and restore kde plasma configurations
 

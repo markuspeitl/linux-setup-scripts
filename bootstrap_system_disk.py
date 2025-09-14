@@ -823,6 +823,11 @@ def unlock_luks_partition(
         print(f"LUKS device {luks_device_name} at path {luks_device_path} already exists -> closing before reopening")
         run_cmd(f"sudo cryptsetup luksClose {luks_device_name}")
 
+    if not luks_passphrase:
+        luks_passphrase = input(f"Please enter the passphrase for the LUKS partition {part_device}: ").strip()
+        if not luks_passphrase:
+            raise ValueError("LUKS passphrase is required but not provided -> exiting")
+
     print_write(f"Opening LUKS partition {part_device} with name {luks_device_name}", fd_path=output_script)
     luks_open_cmd: str = f"echo -n \"{luks_passphrase}\" | sudo cryptsetup luksOpen '{part_device}' {luks_device_name} --key-file -"
     print(luks_open_cmd)
@@ -971,7 +976,7 @@ def install_btrfs_subvolumes(
             run_cmd(f"sudo chmod 600 '{swap_file}'", fd_path=output_script)
             run_cmd(f"sudo mkswap '{swap_file}'", fd_path=output_script)
 
-            run_cmd(f"sudo umount '{subvol_path}")
+            run_cmd(f"sudo umount '{subvol_path}'")
 
             # should be done in running system
             # run_cmd(f"sudo swapon '{swap_file}'", fd_path=output_script)
@@ -988,13 +993,17 @@ def install_btrfs_subvolumes(
     if mounted_info:
         print(f"Warning: Something under {temp_subvol_path} is still mounted after unmounting -> skipping remove -> please check manually")
     else:
-        print(f"Removing temporary subvolume mount directory {temp_subvol_path}")
+        command_output = os.popen(f"ls '{temp_subvol_path}' | wc -l").read().strip()
+        print(f"Removing temporary subvolume mount directory {temp_subvol_path} containing {command_output} entries?")
         if config.get('interactive'):
             continue_guard()
 
         os.rmdir(temp_subvol_path)
 
 # ------------------------ Debugging and files as virtual disk devices -------------------------
+
+
+default_valid_img_extensions: list[str] = ['.img', '.iso', '.qcow2', '.vmdk', '.vdi', '.raw', '.sqsh', '.squash', '.squashfs'],
 
 
 def setup_loopback_device(
@@ -1013,11 +1022,15 @@ def setup_loopback_device(
     # to or set a new size of the sparse file: truncate -s 5G sparse.img
     # to show apparent size of the sparse file: ls -lh disk.img
     # to show the actual size of the sparse file: du -h disk.img
-    if not use_existing:
+    if not use_existing or not os.path.exists(image_path):
         print_write(f"Creating simulation image at {image_path} with size {image_size}")
         run_cmd(f"truncate --size {image_size} '{image_path}'")
     else:
         print_write(f"Using existing simulation image at {image_path}")
+
+    if not is_mountable_image(image_path):
+        raise ValueError(f"Simulation path '{image_path}' is not a valid mountable image file -> valid extensions:"
+                         f" {', '.join(default_valid_img_extensions)} -> exiting")
 
     if os.path.exists(target_device_path):
         if os.path.islink(target_device_path):
@@ -1075,10 +1088,6 @@ def setup_simulation_environment(
     if not sim_path:
         print("No simulation path provided in the configuration under 'simulate' -> skipping simulation setup")
         return None
-
-    if not is_mountable_image(sim_path):
-        raise ValueError(f"Simulation path '{sim_path}' is not a valid mountable image file -> valid extensions:"
-                         f" {', '.join(valid_img_extensions)} -> exiting")
 
     sim_size: str = config.get('sim_size', '10G')
     if not use_existing and not sim_size:

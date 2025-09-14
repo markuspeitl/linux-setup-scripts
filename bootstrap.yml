@@ -37,6 +37,213 @@ stages:
   - install
 
 sets:
+
+# ----------------- Production PC (has 4TB storage)
+
+  prod_pc_setup:
+    partitions:
+      variables:
+        # will be queried
+        target_device:
+        scheme: gpt
+      parts:
+        efi_system:
+          name: NV_EFI
+          size: 1024M
+          type: uefi
+          fs: fat32
+
+        boot_part:
+          name: NV_BOOT
+          size: 2048M
+          type: eboot #linux extended boot
+          fs: ext4
+        
+        system_part:
+          name: NV_SYSTEM
+          size: 
+          type: linux
+
+          luks:
+            luks_device_name: bootsluks
+            luks_passphrase: 
+
+          fs: btrfs
+          compression: zstd:3
+          ssd: true
+          subvolumes:
+            arch:
+              name: "@arch"
+              compression: zstd:3
+            kubuntu:
+              name: "@kubuntu"
+              compression: zstd:3
+            pmarkus:
+              name: "@pmarkus"
+              compression: zstd:5
+              chroot_mount: /home/pmarkus
+            flatpak:
+              name: "@flatpak"
+              compression: zstd:3
+            docker:
+              name: "@docker"
+              compression: zstd:5
+            gaming:
+              name: "@gaming"
+              compression: zstd:2
+            swap:
+              name: "@swap"
+              nocow: true
+              size: 32G
+              swap: true
+
+    chroot:
+      variables:
+        target_device: $target_device
+        mount: /tmp/bootschroot
+      parts:
+        system_part:
+          identify: crypto # partition number, fs type or filesystem label # -> 3, crypto (is encrypted fs), NV_SYSTEM
+          luks:
+            luks_device_name: bootsluks
+            luks_passphrase: 
+          subvolumes:
+            kubuntu:
+              name: "@kubuntu"
+              mount: /
+              compression: zstd:3
+              ssd: true
+              mount_options: "defaults"
+            arch:
+              name: "@arch"
+              mount: /arch
+              compression: zstd:3
+              ssd: true
+              mount_options: "defaults"
+            pmarkus:
+              name: "@pmarkus"
+              mount: /home/pmarkus
+              compression: zstd:5
+              ssd: true
+              mount_options: "defaults"
+            swap:
+              name: "@swap"
+              mount: /swap
+              mount_options: "defaults,ssd,noatime,nodatacow,nodatasum,compress=no"
+              #/swap/swapfile    none     swap   defaults  0 0
+        efi_system:
+          identify: NV_EFI # 1, vfat, NV_EFI
+          mount: /efi
+          mount_options: "defaults,noatime,nosuid,nodev,noexec"
+        boot_part:
+          identify: NV_BOOT # 2, ext4, NV_BOOT
+          mount: /boot
+          mount_options: "defaults,noatime,nosuid,nodev,noexec"
+
+# ----------------- Testing with simulated image
+
+  testing_image_set:
+    partitions:
+      variables:
+        # will be queried
+        target_device: testing_image_set-simulated.img
+        scheme: gpt
+      parts:
+        efi_system:
+          name: NV_EFI
+          size: 128M
+          type: uefi
+          fs: fat32
+        boot_part:
+          name: NV_BOOT
+          size: 256M
+          type: eboot #linux extended boot
+          fs: ext4
+        
+        system_part:
+          name: NV_SYSTEM
+          size: 
+          type: linux
+
+          luks:
+            luks_device_name: bootsluks
+            luks_passphrase: 
+
+          fs: btrfs
+          compression: zstd:3
+          ssd: true
+          subvolumes:
+            arch:
+              name: "@arch"
+              compression: zstd:3
+            kubuntu:
+              name: "@kubuntu"
+              compression: zstd:3
+            pmarkus:
+              name: "@pmarkus"
+              compression: zstd:5
+              chroot_mount: /home/pmarkus
+            flatpak:
+              name: "@flatpak"
+              compression: zstd:3
+            docker:
+              name: "@docker"
+              compression: zstd:5
+            gaming:
+              name: "@gaming"
+              compression: zstd:2
+            swap:
+              name: "@swap"
+              nocow: true
+              size: 512M
+              swap: true
+
+    chroot:
+      variables:
+        target_device: $target_device
+        mount: /tmp/test_chroot
+      parts:
+        system_part:
+          identify: crypto # partition number, fs type or filesystem label # -> 3, crypto (is encrypted fs), NV_SYSTEM
+          luks:
+            luks_device_name: bootsluks
+            luks_passphrase: 
+          subvolumes:
+            kubuntu:
+              name: "@kubuntu"
+              mount: /
+              compression: zstd:3
+              ssd: true
+              mount_options: "defaults"
+            arch:
+              name: "@arch"
+              mount: /arch
+              compression: zstd:3
+              ssd: true
+              mount_options: "defaults"
+            pmarkus:
+              name: "@pmarkus"
+              mount: /home/pmarkus
+              compression: zstd:5
+              ssd: true
+              mount_options: "defaults"
+            swap:
+              name: "@swap"
+              mount: /swap
+              mount_options: "defaults,ssd,noatime,nodatacow,nodatasum,compress=no"
+              #/swap/swapfile    none     swap   defaults  0 0
+        efi_system:
+          identify: NV_EFI # 1, vfat, NV_EFI
+          mount: /efi
+          mount_options: "defaults,noatime,nosuid,nodev,noexec"
+        boot_part:
+          identify: NV_BOOT # 2, ext4, NV_BOOT
+          mount: /boot
+          mount_options: "defaults,noatime,nosuid,nodev,noexec"
+
+# ------------------------------ old
+
+
   encrypted_single_disk_btrfs_arch:
 
     partitions:
