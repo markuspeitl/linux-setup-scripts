@@ -45,6 +45,10 @@ Recursively Umount all mountpoints of the chroot environment for the specified d
 sudo python3 bootstrap_system_disk.py bootstrap.yml clean --clean_devices /dev/bootstrap_loop /dev/sdb
 ```
 
+```sh
+sudo python3 bootstrap_system_disk.py bootstrap.yml partitions chroot --set prod_pc_setup -it
+```
+
 ### Currently supported features:
 
 #### Disk setup
