@@ -8,6 +8,7 @@ bash download_repo.sh linux-setup-scripts
 ```
 Directly execute downloader script from web
 ```sh
+sudo apt update && sudo apt install -y curl
 curl -L https://raw.githubusercontent.com/markuspeitl/linux-setup-scripts/master/download_repo.sh | bash -s -- linux-setup-scripts
 ```
 
