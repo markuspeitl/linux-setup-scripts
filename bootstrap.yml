@@ -1,0 +1,531 @@
+# host_source_system:
+#   arch: which pacman
+#   kubuntu: which apt
+#   fedora: which pacman
+
+
+# dependencies:
+#   prepare:
+#     arch: sudo pacman -Syu --noconfirm
+#     debian: sudo apt update
+#     fedora: sudo dnf update -y
+
+
+  # scheme.partitions.fs:
+  #   luks:
+  #     arch: pacman -S cryptsetup --noconfirm
+  #     debian: apt install cryptsetup -y
+  #     fedora: dnf install cryptsetup -y
+  #   fat32:
+  #     arch: pacman -S dosfstools --noconfirm
+  #     debian: apt install dosfstools -y
+  #     fedora: dnf install dosfstools -y
+  #   ext4:
+  #     arch: pacman -S e2fsprogs --noconfirm
+  #     debian: apt install e2fsprogs -y
+  #     fedora: dnf install e2fsprogs -y
+  #   btrfs:
+  #     arch: pacman -S btrfs-progs --noconfirm
+  #     debian: apt install btrfs-progs -y
+  #     fedora: dnf install btrfs-progs -y
+
+set: encrypted_single_disk_btrfs_arch
+
+stages:
+  - partitions
+  - chroot
+  - install
+
+sets:
+  encrypted_single_disk_btrfs_arch:
+
+    partitions:
+      variables:
+        #target_device: # /dev/sdX1
+        #chroot_mount: #/mnt/sdX1_mount
+        #target_device: /dev/sdb
+        target_device:
+        #work_mount: /mnt/bootstrap_chroot # working dir for mounting for filesystems creation
+        scheme: gpt
+        #sector_size: 512
+
+      parts:
+        # sfdisk --list-types
+        efi_system:
+          #number: 1
+          name: NV_EFI
+          size: 512M
+          type: uefi
+          fs: fat32
+
+        boot_part:
+          #number: 2
+          name: NV_BOOT
+          size: 1500M
+          type: eboot #linux extended boot
+          fs: ext4
+        
+        system_part:
+          #number: 3
+          #name: root
+          name: NV_SYSTEM
+          size: 
+          type: linux
+
+          luks:
+            #source_part: $target_device$number
+            luks_device_name: bootsluks
+            luks_passphrase: test
+            #luks_keyfile: /root/luks-keyfile
+
+          fs: btrfs
+          #mount: $chroot_mount
+          compression: zstd:3
+          ssd: true
+
+          # using & converting to raid: https://archive.kernel.org/oldwiki/btrfs.wiki.kernel.org/index.php/Using_Btrfs_with_Multiple_Devices.html#Conversion
+
+          subvolumes:
+            arch:
+              name: "@arch"
+              compression: zstd:3
+            kubuntu:
+              name: "@kubuntu"
+              compression: zstd:3
+              #read_only: true
+            pmarkus:
+              name: "@pmarkus"
+              compression: zstd:5
+              chroot_mount: /home/pmarkus
+            flatpak:
+              name: "@flatpak"
+              compression: zstd:3
+            docker:
+              name: "@docker"
+              compression: zstd:5
+            gaming:
+              name: "@gaming"
+              compression: zstd:2
+            swap:
+              #https://superuser.com/questions/1067150/how-to-create-swapfile-on-ssd-disk-with-btrfs#comment2641779_1616342
+              #https://askubuntu.com/questions/1206157/can-i-have-a-swapfile-on-btrfs
+              # https://www.jwillikers.com/btrfs-swapfile
+              name: "@swap"
+              nocow: true
+              size: 32G
+              swap: true
+
+    chroot:
+      variables:
+        target_device: $target_device
+        mount: /tmp/bootschroot
+      parts:
+        system_part:
+          identify: crypto # partition number, fs type or filesystem label # -> 3, crypto (is encrypted fs), NV_SYSTEM
+          luks:
+            luks_device_name: bootsluks
+            luks_passphrase: test
+          subvolumes:
+            arch:
+              name: "@arch"
+              mount: /
+              compression: zstd:3
+              ssd: true
+              mount_options: "defaults"
+            kubuntu:
+              name: "@kubuntu"
+              mount: /kubuntu
+              compression: zstd:3
+              ssd: true
+              mount_options: "defaults"
+            pmarkus:
+              name: "@pmarkus"
+              mount: /home/pmarkus
+              compression: zstd:5
+              ssd: true
+              mount_options: "defaults"
+            swap:
+              name: "@swap"
+              mount: /swap
+              mount_options: "defaults,ssd,noatime,nodatacow,nodatasum,compress=no"
+              #/swap/swapfile    none     swap   defaults  0 0
+        efi_system:
+          identify: NV_EFI # 1, vfat, NV_EFI
+          mount: /efi
+          mount_options: "defaults,noatime,nosuid,nodev,noexec"
+        boot_part:
+          identify: NV_BOOT # 2, ext4, NV_BOOT
+          mount: /boot
+          mount_options: "defaults,noatime,nosuid,nodev,noexec"
+
+    install:
+      depends: chroot
+      program: pacstrap
+      type: arch
+      arch:
+        source: https://mirrors.kernel.org/archlinux/
+        packages:
+        - base
+        - base-devel
+        - linux
+        - linux-firmware
+        - btrfs-progs
+        - sudo
+      deb:
+        release: noble
+        source: http://deb.debian.org/debian
+        components: main,contrib,non-free
+        arch: amd64
+      iso:
+        url: https://cdimage.ubuntu.com/kubuntu/releases/24.04.3/release/kubuntu-24.04.3-desktop-amd64.iso
+        unpack: casper/filesystem.squashfs # unpack prepared root file system, to install base system
+      
+
+
+    setup:
+      depends: chroot
+
+      #etc/calamares/modules 
+
+      kernel:
+        host_mount: media/install_host # bind mount to access host files in chroot
+        source: media/install_host/casper/vmlinuz
+        target: boot/vmlinuz-5.15 # should detect host version
+
+      bootloader:
+        grubInstall: grub-install
+        grubMkconfig: grub-mkconfig
+        grubCfg: /boot/grub/grub.cfg
+        entries:
+          ubuntu:
+            root: /dev/mapper/nvmegroup-kubuntu--root # required for booting from logical volume
+            kernel: /boot/vmlinuz
+            #img: /initramfs-linux.img
+            img: /initrd.img
+            timout: 10
+
+      locale:
+        program: locale-gen
+        file: /etc/locale.gen
+        defaults:
+          region: America
+          zone: New_York
+          lang: en_US.UTF-8
+        values:
+          region: Europe
+          zone: Vienna
+
+      machine-id:
+        #https://www.man7.org/linux/man-pages/man5/machine-id.5.html
+        etc: /etc/machine-id
+        dbus: /var/lib/dbus/machine-id # should symlink to /etc/machine-id
+
+      fstab:
+        efi: umask=0077
+
+      display:
+        program: sddm
+        sessions:
+          kde-x11: 
+            cmd: /usr/bin/startplasma-x11
+            session: /usr/share/xsessions/plasma.desktop
+
+      packages:
+        #DEBIAN_FRONTEND=noninteractive apt-get -y --purge remove 
+        remove: 
+          - kmahjongg 
+          - kmines 
+          - kpat 
+          - ksudoku 
+          #- skanlite 
+          #- skanpage
+          #- okular
+          #- libreoffice*
+          #- kdeconnect
+          - krdc #vnc/rdp viewer
+          - konversation
+          - neochat
+          - elisa
+          #- haruna
+          #- vim
+          #- snapd
+          - partitionmanager
+          - usb-creator*
+          - plasma-welcome
+          #- kde-config-tablet
+          - plasma-welcome
+        clean: apt-get -y autoremove
+
+      users:
+        name: pmarkus
+        password: #pmarkus
+        groups: sudo wheel cdrom adm dip lpadmin plugdev
+        #sudo: true
+
+      keys: de-latin1-nodeadkeys
+      #locale: en_US.UTF-8
+      timezone: Europe/Vienna
+
+      # XML api can be used to lookup timezone/location with internet access
+      # https://geoip.ubuntu.com/lookup
+
+      hostname: arch
+      root_password: #root
+      nameservers: [8.8.8.8, 8.8.4.4]
+      networkd: enp1s0
+      user:
+        name: pmarkus
+        password: #pmarkus
+        groups: wheel,sudo
+        sudo: true
+
+    deploy:
+      depends: chroot
+      variables:
+        type: arch
+      types:
+        arch:
+          dependencies:
+            # when downloading the scripts directly they do not need to be installed and should work on almost any linux system
+            # dependencies = coreutils, util-linux, awk and bash --> so very basic
+            - https://gitlab.archlinux.org/archlinux/arch-install-scripts/-/raw/master/pacstrap.in
+            - https://gitlab.archlinux.org/archlinux/arch-install-scripts/-/raw/master/arch-chroot.in
+
+            - https://gitlab.archlinux.org/archlinux/arch-install-scripts/-/raw/master/fstab-helpers
+            - https://gitlab.archlinux.org/archlinux/arch-install-scripts/-/raw/master/genfstab.in
+          run:
+            - pacstrap "$mount" base linux linux-firmware btrfs-progs
+            - genfstab -U "$mount" >> "$mount/etc/fstab"
+            - echo "arch-chroot $mount" > /mnt/arch-chroot.sh
+            - chmod +x /mnt/arch-chroot.sh
+
+          # debootstrap needs to be installed -> however would be easy to convert to appimage or other portable format
+
+
+    genfstab:
+      variables:
+        mount: $chroot_mount
+      # 1. check if anything is indeed mounted at chroot
+      # 2. generate fstab
+      cmd: 
+        - cp -ap "{mount}/etc/fstab" "{mount}/etc/fstab.bak"
+        - genfstab -U "{mount}" > "{mount}/etc/fstab"
+
+    # chroot:
+    #   variables:
+    #     target_device: # /dev/sdX1
+    #     chroot_mount: /mnt/bootstrap_chroot
+    #   mounts:
+    #     efi_system: "/efi"
+    #     boot_part: "/boot"
+    #     "@arch": "/"
+    #     "@kubuntu": "/kubuntu"
+    #     "@pmarkus": "/home/pmarkus"
+    #     "@swap": "/swap"
+
+    bootstrap:
+      variables:
+        chroot_mount: /mnt/bootstrap_chroot
+      arch: |
+        pacstrap "$chroot_mount" base linux linux-firmware btrfs-progs
+        genfstab -U "$chroot_mount" >> $chroot_mount/etc/fstab
+        echo "arch-chroot $chroot_mount" > /mnt/arch-chroot.sh
+        chmod +x /mnt/arch-chroot.sh
+      kubuntu: |
+        debootstrap --arch amd64 focal $chroot_mount http://archive.ubuntu.com/ubuntu/
+        echo "chroot $chroot_mount" > /mnt/chroot.sh
+        chmod +x /mnt/chroot.sh
+      fedora: |
+        dnf --installroot=$chroot_mount --releasever=34 --setopt=install_weak_deps=False install -y fedora-release
+
+  mount_usb_multiboot:
+    chroot:
+      variables:
+        # lsblk -f --list -o NAME,LABEL,UUID | grep EFICRU240 | grep -Eo "^[a-z0-9]+" --> to match device
+        #lsblk -ndo pkname /dev/sdb3 --> to map parent
+        target_device: EFICRU240
+        mount: /mnt/LINUXCRU240
+
+      parts:
+        system_part:
+          identify: btrfs # partition number, fs type or paritition type
+          subvolumes:
+            kubuntu:
+              name: "@kubuntu"
+              mount: /
+              compression: zstd:3
+              ssd: true
+            arch:
+              name: "@arch"
+              mount: /arch
+              compression: zstd:3
+              ssd: true
+            pmarkus:
+              name: "@pmarkus"
+              mount: /home/pmarkus
+              compression: zstd:5
+              ssd: true
+            swap:
+              name: "@swap"
+              mount: /swap
+              ssd: true
+              mount_options: "defaults,ssd,noatime,nodatacow,nodatasum,compress=no"
+
+        efi_system:
+          identify: EFICRU240
+          mount: /efi
+          mount_options: "defaults,noatime,nosuid,nodev,noexec"
+
+        boot_part:
+          identify: BOOTCRU240
+          mount: /boot
+          mount_options: "defaults,noatime,nosuid,nodev,noexec"
+
+        windows_part:
+          identify: WINDOWSCRU240
+          mount: /windows
+
+
+  green_usb_8GB:
+
+    partitions:
+      variables:
+        target_device: 9207217BF1696510008
+        scheme: gpt
+
+      parts:
+        efi_system:
+          name: GREEN_EFI
+          size: 512M
+          type: uefi
+          fs: fat32
+
+        boot_part:
+          name: GREEN_BOOT
+          size: 500M
+          type: eboot
+          fs: ext4
+        
+        system_part:
+          name: GREEN_SYSTEM
+          size: 
+          type: linux
+
+          luks:
+            luks_device_name: greenluks
+            luks_passphrase: test
+
+          fs: btrfs
+          compression: zstd:3
+
+          subvolumes:
+            arch:
+              name: "@arch"
+              compression: zstd:3
+            kubuntu:
+              name: "@kubuntu"
+              compression: zstd:3
+            pmarkus:
+              name: "@pmarkus"
+              compression: zstd:5
+              chroot_mount: /home/pmarkus
+            swap:
+              name: "@swap"
+              nocow: true
+              size: 512M
+              swap: true
+    chroot:
+      variables:
+        #target_device: $target_device
+        mount: /mnt/green_usb_8GB
+      parts:
+        system_part:
+          identify: crypto
+          luks:
+            luks_device_name: greenluks
+            luks_passphrase: test
+          subvolumes:
+            arch:
+              name: "@arch"
+              mount: /
+              compression: zstd:3
+              mount_options: "defaults"
+            kubuntu:
+              name: "@kubuntu"
+              mount: /kubuntu
+              compression: zstd:3
+              mount_options: "defaults"
+            pmarkus:
+              name: "@pmarkus"
+              mount: /home/pmarkus
+              compression: zstd:5
+              mount_options: "defaults"
+            swap:
+              name: "@swap"
+              mount: /swap
+              mount_options: "defaults,ssd,noatime,nodatacow,nodatasum,compress=no"
+        efi_system:
+          identify: GREEN_EFI
+          mount: /efi
+          mount_options: "defaults,noatime,nosuid,nodev,noexec"
+        boot_part:
+          identify: GREEN_BOOT
+          mount: /boot
+          mount_options: "defaults,noatime,nosuid,nodev,noexec"
+
+
+#   chroot_system:
+#     variables:
+#       target_device: /dev/sdX1
+#       chroot_mount: /mnt/sdX1_mount
+
+#     bootstrap:
+#       arch: |
+#         pacstrap $chroot_mount base linux linux-firmware btrfs-progs
+#         genfstab -U $chroot_mount >> $chroot_mount/etc/fstab
+#         echo "arch-chroot $chroot_mount" > /mnt/arch-chroot.sh
+#         chmod +x /mnt/arch-chroot.sh
+#       kubuntu: |
+#         debootstrap --arch amd64 focal $chroot_mount http://archive.ubuntu.com/ubuntu/
+#         echo "chroot $chroot_mount" > /mnt/chroot.sh
+#         chmod +x /mnt/chroot.sh
+#       fedora: |
+#         dnf --installroot=$chroot_mount --releasever=34 --setopt=install_weak_deps=False install -y fedora-release
+
+#     chroot:
+#       base: chroot $chroot_mount
+#       arch: |
+#         pacman -Syu --noconfirm
+#         pacman -S --noconfirm grub efibootmgr os-prober
+#         grub-install --target=x86_64-efi --efi-directory=$chroot_mount/efi --bootloader-id=GRUB
+#         grub-mkconfig -o $chroot_mount/boot/grub/grub.cfg
+#         echo "GRUB_ENABLE_BTRFS=true" >> $chroot_mount/etc/default/grub
+#         echo "GRUB_CMDLINE_LINUX_DEFAULT=\"quiet splash\"" >> $chroot_mount/etc/default/grub
+#         echo "GRUB_CMDLINE_LINUX=\"root=/dev/mapper/luks\"" >> $chroot_mount/etc/default/grub
+#         echo "GRUB_DISABLE_OS_PROBER=false" >> $chroot_mount/etc/default/grub
+#         echo "GRUB_DISABLE_SUBMENU=false" >> $chroot_mount/etc/default/grub
+#         echo "GRUB_TERMINAL=console" >> $chroot_mount/etc/default/grub
+#         echo "GRUB_TIMEOUT=5" >> $chroot_mount/etc/default/grub
+#         echo "GRUB_DEFAULT=0" >> $chroot_mount/etc/default/grub
+#         echo "GRUB_DISABLE_RECOVERY=true" >> $chroot_mount/etc/default/grub
+#         echo "GRUB_PRELOAD_MODULES=\"btrfs\"" >> $chroot_mount/etc/default/grub
+#         echo "GRUB_DISABLE_LINUX_UUID=true" >> $chroot_mount/etc/default/grub
+#         echo "GRUB_DISABLE_LINUX_PARTUUID=true" >> $chroot_mount/etc/default/grub
+#         grub update
+
+#     setup:
+#       arch:
+#         keys: de-latin1-nodeadkeys
+#         locale: en_US.UTF-8
+#         timezone: Europe/Vienna
+#         hostname: arch
+#         root_password: root
+#         nameservers: [8.8.8.8, 8.8.4.4]
+#         networkd: enp1s0
+#         user:
+#           name: pmarkus
+#           password: pmarkus
+#           groups: wheel,sudo
+#           sudo: true
+#         #root_part: 
+

@@ -1,0 +1,107 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+      // {
+      //   "name": "bootstrap system from yaml",
+      //   "type": "debugpy",
+      //   "request": "launch",
+      //   "program": "${workspaceFolder}/linux-administration/bootstrap_system_disk.py",
+      //   "sudo": false,
+      //   "args": [
+      //     "${workspaceFolder}/linux-administration/bootstrap.yml",
+      //     "--output",
+      //     "./generated_partitioning_script.sh",
+      //     "--force_output_requirements"
+      //   ],
+      //   "env": {}
+      // },
+      {
+        "name": "bootstrap system disk simulated",
+        "type": "debugpy",
+        "request": "launch",
+        "program": "${workspaceFolder}/linux-administration/bootstrap_system_disk.py",
+        "sudo": true,
+        "args": [
+          "${workspaceFolder}/linux-administration/bootstrap.yml",
+          "partitions",
+          "--set",
+          "encrypted_single_disk_btrfs_arch",
+          "--simulate",
+          "${workspaceFolder}/linux-administration/simulated_disk.img",
+          "--sim_size",
+          "10G",
+          "--overwrite_sim"
+        ],
+        "env": {}
+      },
+      {
+        "name": "bootstrap system disk green usb",
+        "type": "debugpy",
+        "request": "launch",
+        "program": "${workspaceFolder}/linux-administration/bootstrap_system_disk.py",
+        "sudo": true,
+        "args": [
+          "${workspaceFolder}/linux-administration/bootstrap.yml",
+          "partitions",
+          "chroot",
+          "--set",
+          "green_usb_8GB",
+          "-it"
+        ],
+        "env": {}
+      },
+      {
+        "name": "bootstrap mount simulated",
+        "type": "debugpy",
+        "request": "launch",
+        "program": "${workspaceFolder}/linux-administration/bootstrap_system_disk.py",
+        "sudo": true,
+        "args": [
+          "${workspaceFolder}/linux-administration/bootstrap.yml",
+          "chroot",
+          "--set",
+          "encrypted_single_disk_btrfs_arch",
+          "--simulate",
+          "${workspaceFolder}/linux-administration/simulated_disk.img",
+          "--sim_size",
+          "10G",
+          "--overwrite_sim"
+        ],
+        "env": {}
+      },
+      {
+        "name": "bootstrap mount usb ssd",
+        "type": "debugpy",
+        "request": "launch",
+        "program": "${workspaceFolder}/linux-administration/bootstrap_system_disk.py",
+        "sudo": true,
+        "args": [
+          "${workspaceFolder}/linux-administration/bootstrap.yml",
+          "chroot",
+          "--set",
+          "mount_usb_multiboot"
+        ],
+        "env": {}
+      },
+      {
+        "name": "bootstrap clean devices",
+        "type": "debugpy",
+        "request": "launch",
+        "program": "${workspaceFolder}/linux-administration/bootstrap_system_disk.py",
+        "sudo": true,
+        "args": [
+          "${workspaceFolder}/linux-administration/bootstrap.yml",
+          "clean",
+          "--clean_devices",
+          //"/dev/loop34",
+          //"/dev/loop35",
+          "/dev/sdb",
+          "/dev/bootstrap_loop"
+        ],
+        "env": {}
+      },
+    ],
+  }

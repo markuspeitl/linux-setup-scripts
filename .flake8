@@ -1,0 +1,3 @@
+[flake8]
+ignore = E501, W503, F401, F541, F841, E402
+max-line-length = 200
