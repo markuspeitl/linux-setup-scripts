@@ -2,7 +2,7 @@
 
 Download this repository to RAM
 ```sh
-curl -L https://raw.githubusercontent.com/pmarkus/linux-setup-scripts/main/download_repo.sh | bash -s -- linux-setup-scripts
+curl -L https://raw.githubusercontent.com/markuspeitl/linux-setup-scripts/master/download_repo.sh | bash -s -- linux-setup-scripts
 ```
 
 Create partitions configured in bootstrap.yml and filesystems on a disk image file (under stages set `encrypted_single_disk_btrfs_arch`):
