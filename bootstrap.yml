@@ -126,6 +126,24 @@ sets:
               compression: zstd:5
               ssd: true
               mount_options: "defaults"
+            flatpak:
+              name: "@flatpak"
+              mount: /var/lib/flatpak
+              compression: zstd:3
+              ssd: true
+              mount_options: "defaults,nodatacow,nodatasum"
+            docker:
+              name: "@docker"
+              mount: /var/lib/docker
+              compression: zstd:5
+              ssd: true
+              mount_options: "defaults"
+            gaming:
+              name: "@gaming"
+              mount: /gaming
+              compression: zstd:2
+              ssd: true
+              mount_options: "defaults,nodatacow,nodatasum"
             swap:
               name: "@swap"
               mount: /swap
