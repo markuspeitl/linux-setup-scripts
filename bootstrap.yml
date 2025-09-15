@@ -99,7 +99,8 @@ sets:
 
     chroot:
       variables:
-        target_device: $target_device
+        #target_device: $target_device
+        target_device: 
         mount: /tmp/bootschroot
       parts:
         system_part:

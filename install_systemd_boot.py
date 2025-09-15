@@ -1,9 +1,34 @@
 #! /usr/bin/env python3
+import datetime
+import json
 import os
 import re
+import sys
+
+selected_root_part = sys.argv[1]
+print(f"Selected root part: {selected_root_part}")
+if not os.path.exists(selected_root_part):
+    print(f"Selected root part {selected_root_part} does not exist")
+    exit(1)
+
+block_infos = os.popen(f"blkid {selected_root_part} -o json").read().strip()
+print(f"blkid info for {selected_root_part}: {block_infos}")
+block_infos_parsed = json.loads(block_infos)
+root_blockdev_uuid = block_infos_parsed["uuid"]
+print(f"Root block device UUID: {root_blockdev_uuid}")
+if not root_blockdev_uuid:
+    print(f"Could not find UUID for {selected_root_part}")
+    exit(1)
 
 
 def install_systemd_boot_for_system():
+
+    path_timestamp = datetime.datetime.now().strftime("%y_%m_%d-%H_%M_%S")
+
+    os.makedirs("/home/pmarkus/bootloader_backups", exist_ok=True)
+    os.system(f"tar -I 'zstd -7' -cf /home/pmarkus/bootloader_backups/boot_backup_{path_timestamp}.tar.zst --absolute-names /boot")
+    os.system(f"tar -I 'zstd -7' -cf /home/pmarkus/bootloader_backups/efi_backup_{path_timestamp}.tar.zst --absolute-names /efi")
+
     os.system("update-initramfs -c -k all")
     os.system("systemctl set-default graphical.target")
 
@@ -35,15 +60,18 @@ def generate_boot_entry(entry_title, entries_dir):
 
     os.makedirs(entries_dir, exist_ok=True)
 
-    crpto_part_info = os.popen("lsblk -f /dev/sdc -o FSTYPE,UUID | grep crypto").read().strip()
+    # crpto_part_info = os.popen("lsblk -f -o FSTYPE,UUID | grep crypto").read().strip()
 
-    if '\n' in crpto_part_info:
-        print("Multiple crypto partitions found, not supported")
-        exit(1)
+    # if '\n' in crpto_part_info:
+    #     print("Multiple crypto partitions found, not supported")
+    #     exit(1)
 
-    crpto_part_info = re.sub(r'\s+', ' ', crpto_part_info)
-    crpto_part_info_parts = crpto_part_info.split(' ')
-    crpto_part_uuid = crpto_part_info_parts[1]
+    # crpto_part_info = re.sub(r'\s+', ' ', crpto_part_info)
+    # crpto_part_info_parts = crpto_part_info.split(' ')
+    # crpto_part_uuid = crpto_part_info_parts[1]
+
+    # find out with blkid /dev/luks-partitions --> UUID entry
+    crpto_part_uuid = root_blockdev_uuid
 
     root_subvol = "@kubuntu"
 
