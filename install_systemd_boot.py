@@ -75,6 +75,19 @@ def generate_boot_entry(entry_title, entries_dir):
 
     root_subvol = "@kubuntu"
 
+    # systemd does not allow .img or kernel entries to be SYMLINKS
+    # must be regular files --> otherwise broken
+
+    # to resolve:
+    # cd /boot
+    # readlink vmlinuz >> loader/entries/kubuntu-luks-edge.conf
+    # readlink initrd.img >> loader/entries/kubuntu-luks-edge.conf
+    # micro loader/entries/kubuntu-luks-edge.conf
+    # bootctl update
+    # bootctl list
+    # bootctl
+    # bootctl -p && bootctl -x && bootctl -R
+
     conf_entry_template = f"""\
 title {entry_title}
 linux /vmlinuz
