@@ -1,0 +1,37 @@
+exit
+ls
+cd /scripts
+ls
+sudo mkdir -p /mnt/linux-setup-scripts
+ping 192.168.0.XXX
+sshfs -p PPPP pmarkus@192.168.0.XXX:~/repos/linux-setup-scripts /mnt/linux-setup-scripts/
+sudo chmod 777 /mnt/linux-setup-scripts
+sshfs -p PPPP pmarkus@192.168.0.XXX:~/repos/linux-setup-scripts /mnt/linux-setup-scripts/
+cd /mnt/linux-setup-scripts
+ls
+sshfs -p PPPP pmarkus@192.168.0.XXX:/home/pmarkus/repos/linux-setup-scripts /mnt/linux-setup-scripts/
+ls
+cd ..
+cd linux-setup-scripts/
+ls
+sudo -i
+groups
+sudo -i
+sudo ./snapshot_history.sh
+sudo chmod +x ./snapshot_history.sh
+sudo -i
+cd ..
+fusermount3 -u /mnt/linux-setup-scripts
+sshfs -o allow_other -p PPPP pmarkus@192.168.0.XXX:/home/pmarkus/repos/linux-setup-scripts /mnt/linux-setup-scripts/
+micro /etc/fuse.conf
+sshfs -o allow_other -p PPPP pmarkus@192.168.0.XXX:/home/pmarkus/repos/linux-setup-scripts /mnt/linux-setup-scripts/
+sudo -i
+cd linux-setup-scripts/
+sudo bash ./snapshot_history.sh
+cat /home/pmarkus/.bash_history
+echo $0
+cat /home/pmarkus/.bash_history
+groups
+cat /root/.bash_history
+sudo cat /root/.bash_history
+exit

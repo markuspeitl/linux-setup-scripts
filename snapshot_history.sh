@@ -8,7 +8,9 @@
 username=$(whoami)
 history_logs_dir="$1"
 if [ -z "$history_logs_dir" ]; then
-    history_logs_dir=/home/$username/repos/linux-setup-scripts/logs
+    script_dir=$(dirname "$(realpath "$0")")
+    #history_logs_dir=/home/$username/repos/linux-setup-scripts/logs
+    history_logs_dir="$script_dir/logs"
 fi
 #history_logs_dir=$snapshot_dir/logs
 
@@ -22,15 +24,21 @@ function snap_history(){
 
     history_file="$src_home_dir/.bash_history"
     if [ -f "$history_file" ]; then
+        echo "Snapping history from '$history_file' to '$history_logs_dir/$target_file-bash-$file_timestamp.log'"
         cat "$history_file" > "$history_logs_dir/$target_file-bash-$file_timestamp.log"
     fi
     history_file="$src_home_dir/.zsh_history"
     if [ -f "$history_file" ]; then
+        echo "Snapping history from '$history_file' to '$history_logs_dir/$target_file-zsh-$file_timestamp.log'"
         cat "$history_file" > "$history_logs_dir/$target_file-zsh-$file_timestamp.log"
     fi
 }
 
-snap_history "/home/$username" "host-$username"
+chroot_users=$(ls "/home")
+for username in $chroot_users; do
+    snap_history "/home/$username" "host-$username"
+done
+
 snap_history "/root" "host-root-user"
 
 if [ -z "$chroot_dir" ]; then
