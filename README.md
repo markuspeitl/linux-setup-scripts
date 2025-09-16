@@ -166,6 +166,8 @@ Copy files to the server (msrv configured in ~/.ssh/config)
 ```sh
 # note: does place it under the target directory if that exists
 scp -r ~/repos/linux-setup-scripts msrv:~/linux-setup-scripts
+
+rsync --archive --recursive --verbose --compress --checksum --delete --exclude="*.img" ~/repos/linux-setup-scripts/ msrv:~/linux-setup-scripts/
 ```
 
 ```sh

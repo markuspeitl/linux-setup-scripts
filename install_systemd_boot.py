@@ -11,11 +11,11 @@ if not os.path.exists(selected_root_part):
     print(f"Selected root part {selected_root_part} does not exist")
     exit(1)
 
-block_infos = os.popen(f"blkid {selected_root_part} -o json").read().strip()
-print(f"blkid info for {selected_root_part}: {block_infos}")
-block_infos_parsed = json.loads(block_infos)
-root_blockdev_uuid = block_infos_parsed["uuid"]
-print(f"Root block device UUID: {root_blockdev_uuid}")
+root_blockdev_uuid = os.popen(f"blkid {selected_root_part} -o value | head -n 1").read().strip()
+# print(f"blkid info for {selected_root_part}: {block_infos}")
+# block_infos_parsed = json.loads(block_infos)
+# root_blockdev_uuid = block_infos_parsed["uuid"]
+# print(f"Root block device UUID: {root_blockdev_uuid}")
 if not root_blockdev_uuid:
     print(f"Could not find UUID for {selected_root_part}")
     exit(1)
@@ -110,7 +110,8 @@ options rd.luks.name={crpto_part_uuid}=bootsluks root=/dev/mapper/bootsluks rw r
 
 install_systemd_boot_for_system()
 
-dboot_conf_dir = "/tmp/fake-dboot"
+# dboot_conf_dir = "/tmp/fake-dboot"
+dboot_conf_dir = "/boot/loader"
 boot_entries_dir = os.path.join(dboot_conf_dir, "entries")
 os.makedirs(boot_entries_dir, exist_ok=True)
 
