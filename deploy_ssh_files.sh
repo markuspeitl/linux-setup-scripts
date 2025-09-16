@@ -22,11 +22,16 @@ msrv:~/linux-setup-scripts/
 # --dry-run
 
 
-# cd .git/hooks || exit 1
-# touch post-commit
-# chmod +x post-commit
-# echo "#!/usr/bin/env bash" > post-commit
-# echo "Hook cwd: $(cwd)"
+# cat << 'EOF' | tee .git/hooks/post-commit
+# #!/usr/bin/env bash
+# # echo "Hook cwd: $(cwd)"
 # current_dir=$(dirname "$(realpath "$0")")
 # echo "Hook current dir: $current_dir"
-# #sh ../../deploy_ssh_files.sh
+# repo_dir=$(realpath "$current_dir/../..")
+# echo "Hook repo dir: $repo_dir"
+# deploy_script_path="$repo_dir/deploy_ssh_files.sh"
+# echo "Hook running script: $deploy_script_path"
+
+# bash "$deploy_script_path"
+# EOF
+# chmod +x .git/hooks/post-commit
