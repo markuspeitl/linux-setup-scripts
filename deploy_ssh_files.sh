@@ -24,4 +24,9 @@ msrv:~/linux-setup-scripts/
 
 # cd .git/hooks || exit 1
 # touch post-commit
+# chmod +x post-commit
 # echo "#!/usr/bin/env bash" > post-commit
+# echo "Hook cwd: $(cwd)"
+# current_dir=$(dirname "$(realpath "$0")")
+# echo "Hook current dir: $current_dir"
+# #sh ../../deploy_ssh_files.sh
