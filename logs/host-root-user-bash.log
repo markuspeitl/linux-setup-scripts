@@ -391,3 +391,112 @@ exit
 ls
 ls -ah
 exit
+ls
+lsblk /efi
+lsblk -f /dev/nvmen0p1
+lsblk
+lsblk -f /dev/nvme0n1p1
+lsblk -f /dev/nvme0n1p2
+mkfs.vfat -F32 /dev/nvme0n1p2 -n NV_BOOT
+umount /boot
+mkfs.vfat -F32 /dev/nvme0n1p2 -n NV_BOOT
+umount /boot
+mkfs.vfat -F32 /dev/nvme0n1p2 -n NV_BOOT
+lsblk
+lsof +D /boot
+mount
+multipath -h
+micro /etc/fstab
+reboot
+lsblk
+mkfs.vfat -F32 /dev/nvme0n1p2 -n NV_BOOT
+lsblk -f 
+mount /dev/nvme0n1p2 /boot
+cd /boot
+ls
+cd ..
+exit
+ls
+exit
+export DRY_RUN=1 bash /tmp/extract-archive-dir.sh /home/pmarkus/boot-deps-backup/boot-snapshot.tar.zst /boot
+export DRY_RUN=1 && bash /tmp/extract-archive-dir.sh /home/pmarkus/boot-deps-backup/boot-snapshot.tar.zst /boot
+export DRY_RUN= && bash /tmp/extract-archive-dir.sh /home/pmarkus/boot-deps-backup/boot-snapshot.tar.zst /boot
+ls /boot
+ls /boot/boot
+export DRY_RUN= && bash /tmp/extract-archive-dir.sh /home/pmarkus/boot-deps-backup/boot-snapshot.tar.zst /
+ls /boot
+ls
+rm -r /boot/boot
+ls /boot
+cd loader
+cd /boot
+ls
+cd loader
+ls
+cd entries
+ls
+ls /efi/loader/entries
+micro kubuntu-luks-edge.conf
+mv kubuntu-luks-edge.conf boot-kubuntu-luks-edge.conf
+mv cp boot-kubuntu-luks-edge.conf boot-abs-kubuntu-luks-edge.conf 
+cp boot-kubuntu-luks-edge.conf boot-abs-kubuntu-luks-edge.conf 
+micro boot-abs-kubuntu-luks-edge.conf
+micro 09dd90de2f2c4feb96aad43c70b0c4fd-6.14.0-33-generic.conf
+ls
+cd ..
+ls
+cd ..
+cd 09dd90de2f2c4feb96aad43c70b0c4fd
+ls
+ls -ah
+tree
+cd ..
+ls
+ls -al
+du -h /boot
+exit
+ls
+cd /boot
+ls
+micro /etc/fstab
+mount /dev/nvme0n1p2 /boot
+ls
+ls -ah
+cd ..
+cd boot
+ls
+/efi
+cd /efi
+ls
+cd loader
+ls
+cd entries
+ls
+micro kubuntu-luks-edge.conf
+cd /boot
+ls
+cd loader/entries/
+ls
+micro 09dd90de2f2c4feb96aad43c70b0c4fd-6.14.0-33-generic.conf
+micro 09dd90de2f2c4feb96aad43c70b0c4fd-6.14.0-29-generic.conf
+reboot
+cd /boot
+ks
+ls
+cd loader/entries/
+ls
+micro ~/.bashrc
+micro boot-abs-kubuntu-luks-edge.conf
+micro 09dd90de2f2c4feb96aad43c70b0c4fd-6.14.0-33-generic.conf
+ls
+cd ..
+ls
+cd ..
+cd loader/
+ls
+micro loader.conf
+cd ..
+ls
+du 09dd90de2f2c4feb96aad43c70b0c4fd/6.14.0-29-generic/initrd.img-6.14.0-29-generic
+du initrd.img-6.14.0-29-generic
+reboot

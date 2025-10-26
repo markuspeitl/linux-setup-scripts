@@ -192,3 +192,23 @@ sudo bash snapshot_history.sh
 ls -al
 sudo -i
 sudo reboot now
+sudo -i
+sshfs -p <redacted-port> pmarkus@<redacted_ip>:/home/pmarkus/repos/linux-setup-scripts /mnt/linux-setup-scripts
+cd /mnt/linux-setup-scripts
+ls
+tar -h | help
+tar -h | less
+tar --help | less
+echo "test.tar.zst" | grep -Eo "(\.zst|\.zstd)$"
+echo "test.tar.zstd" | grep -Eo "(\.zst|\.zstd)$"
+echo "test.tar.zstdd" | grep -Eo "(\.zst|\.zstd)$"
+which sss
+which zstd
+chmod +x utils/extract-archive-dir.sh
+./utils/extract-archive-dir.sh ~/boot-deps-backup/boot-snapshot.tar.zst /boot
+lsblk -f
+ls -al /efi
+sudo -i
+cp utils/extract-archive-dir.sh /tmp
+sudo -i
+sudo reboot now
