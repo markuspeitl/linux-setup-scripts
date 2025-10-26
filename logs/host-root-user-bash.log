@@ -1,0 +1,393 @@
+apt update
+apt upgrade
+apt install kubuntu-desktop
+ls
+cd efi
+ls
+cd ..
+cd /boot
+ls
+apt install systemd-boot
+history
+history /home/pmarkus/logs/chroot_hist
+mkdir -p /home/pmarkus/logs
+history > /home/pmarkus/logs/chroot_hist
+exit
+python3 -h
+ls
+cd /dev/shm
+ls
+cd ..
+ls
+exit
+ls
+cd scripts
+ls
+exit
+ls
+ls scripts/
+cd scripts
+ls efi
+cd ..
+ls efi
+ls boot
+tar -I 'zstd -7' -cf /home/pmarkus/boot_backup.tar.zst /boot
+zstd -h
+tar -I 'zstd -7' -cf /home/pmarkus/boot_backup.tar.zst /boot
+tar -I 'zstd -7' -cf /home/pmarkus/boot_backup.tar.zst --absolute-names /boot
+tar -I 'zstd -7' -cf /home/pmarkus/efi_backup.tar.zst --absolute-names /efi
+du /home/pmarkus/boot_backup.tar.zst
+du /home/pmarkus/efi_backup.tar.zst
+du /efi
+cd scripts/
+python3 install_systemd_boot.py
+nano install_systemd_boot.py
+micro install_systemd_boot.py
+lsblk -f -o FSTYPE,UUID
+lsblk
+lsblk -f /dev/nvme0n1 -o FSTYPE,UUID
+lsblk -f /dev/nvme0n1
+blkid /dev/nvme0n1p3
+blkid /dev/nvme0n1
+micro install_systemd_boot.py
+python3 install_systemd_boot.py
+cd ..
+cat /etc/fstab
+apt install arch-install-scripts
+genfstab -U / >> /etc/fstab
+micro /etc/fstab
+bootctl update
+bootctl status
+sudo reboot now
+exit
+ls
+ls /efi
+ls
+tree /efi
+apt install tree
+tree /efi
+cat efi/loader/loader.conf
+ls /boot
+tree /boot/EFI
+tree /boot/loader
+rm /boot/loader
+rm -r /boot/loader
+rm -r /boot/EFI
+ls /boot/09dd90de2f2c4feb96aad43c70b0c4fd
+tree /efi
+rm /efi/*
+rm -r /efi/*
+tree /efi
+tree /boot
+cd scripts
+lsblk
+blkid /dev/nvme0n1p3
+blkid /dev/nvme0n1
+python3 install_systemd_boot.py /dev/nvme0n1p3
+blkid /dev/nvme0n1p3
+blkid /dev/nvme0n1p3 -o json
+man blkid
+blkid -v
+sudo apt update
+apt upgrade
+micro install_systemd_boot.py
+blkid /dev/nvme0n1p3 -o value
+blkid /dev/nvme0n1p3 -o value | head -n 1
+blkid /dev/nvme0n1p3
+micro install_systemd_boot.py
+python3 install_systemd_boot.py /dev/nvme0n1p3
+bootctl update
+bootctl status
+ls
+cd ..
+ls
+tree /efi
+cat /efi/loader/loader.conf
+cat /boot
+tree /boot
+micro scripts/install_systemd_boot.py
+python3 install_systemd_boot.py /dev/nvme0n1p3
+python3 scripts/install_systemd_boot.py /dev/nvme0n1p3
+bootctl update
+bootctl status
+lsblk
+lsblk -f /dev/nvme0n1p1
+lsblk -f /dev/nvme0n1p2
+lsblk -f /dev/nvme0n1
+efivar --list
+ls /sys/firmware/efi/efivars
+cat /boot/loader/entries/kubuntu-luks-edge.conf
+ls /boot
+bootctl install
+sfdisk -l /dev/nvme0n1
+fdisk /dev/nvme0n1
+bootctl --esp-path=/efi --boot-path=/boot install
+bootctl update
+bootctl set-default kubuntu-luks-edge.conf
+cat /boot/loader/entries/kubuntu-luks-edge.conf
+micro /boot/loader/entries/kubuntu-luks-edge.conf
+bootctl list
+reboot
+exit
+ls
+cd script
+cd scripts
+ls
+cd linux-setup-scripts
+ls
+exit
+ls
+cd scripts
+ls
+cd ..
+bootctl
+cd boot
+ls
+readline initrd.img
+readlink initrd.img
+readlink vmlinuz.img
+readlink vmlinuz
+readlink vmlinuz.img >> loader/entries/kubuntu-luks-edge.conf
+readlink vmlinuz >> loader/entries/kubuntu-luks-edge.conf
+readlink initrd.img >> loader/entries/kubuntu-luks-edge.conf
+micro loader/entries/kubuntu-luks-edge.conf
+bootctl
+bootctl -h
+bootctl list
+bootctl update
+bootctl -p
+bootctl -h
+bootctl is-installed
+bootctl -h
+bootctl -x
+bootctl -R
+bootctl
+ls
+lsblk
+blkid /dev/nvme0n1p3
+exit
+ls
+cd efi
+ls
+cd loader/
+ls
+cat loader.conf
+cd ..
+bootctl install
+bootctl -l
+bootctl list
+bootctl update
+ls
+cd boot
+ls
+cd load
+loader
+cd loader
+ls
+cat loader.conf
+tree
+cd ..
+tree efi
+cat /boot/loader/entries.srel
+cp -ap /boot/loader/* /efi/loader/
+cp -rap /boot/loader/* /efi/loader/
+ls /boot
+cp -ap /boot/initrd.img-6.14.0-29-generic /efi/
+cp -ap /boot/vmlinuz-6.14.0-29-generic /efi/
+bootctl status
+exit
+su pmarkus
+passwd pmarkus
+passwd
+ls
+mount -o compress=zstd:3,subvol=@pmarkus /dev/mapper/bootsluks /home/pmarkus
+mount -t btrfs -o compress=zstd:3,subvol=@pmarkus /dev/mapper/bootsluks /home/pmarkus
+mounts -a
+mount
+ls -l /hom/pmarkus
+ls -l /home/pmarkus
+ls -l /home/
+chown -R pmarkus /home/pmarkus
+ls -l /home/
+chgrp -R pmarkus /home/pmarkus
+cd /efi
+ls
+cd loader
+ls
+cd entries/kubuntu-luks-edge.conf
+micro entries/kubuntu-luks-edge.conf
+cp entries/kubuntu-luks-edge.conf /boot/loader/entries
+reboot
+ls
+cd /efi
+ls
+cd loader
+ls
+micro entries/kubuntu-luks-edge.conf
+cp entries/kubuntu-luks-edge.conf /boot/loader/entries
+reboot
+ls
+ls /dev/disk/by-uuid
+cat /efi/loader/entries/kubuntu-luks-edge.conf
+dracut
+micro /efi/loader/entries/kubuntu-luks-edge.conf
+cp /efi/loader/entries/kubuntu-luks-edge.conf /boot/loader/entries
+reboot
+lsinitramfs /boot/initrd.img-6.14.0-29-generic | grep crypt
+apt install cryptsetup cryptsetup-initramfs
+cd /usr/share/initramfs-tools/scripts/local-top/
+ls
+touch /etc/crypttab
+micro /etc/crypttab
+blkid /dev/nvme0n1p3
+micro /etc/crypttab
+update-initramfs -u -k all
+cp /boot/initrd.img-6.14.0-29-generic /efi
+lsinitramfs /boot/initrd.img-6.14.0-29-generic | grep crypt
+reboot
+lsb_release
+exit
+cat ~/.bashrc
+cp ~/.bashrc /home/pmarkus/.bashrc
+chown pmarkus /home/pmarkus/.bashrc
+chgrp pmarkus /home/pmarkus/.bashrc
+exit
+systemctl status networking
+systemctl enable networking
+systemctl status network-manager
+systemctl list
+systemctl list-jobs
+systemctl list-units
+systemctl status NetworkManager
+systemctl restart NetworkManager
+ifconfig
+apt install ifconfig
+micro /etc/NetworkManager/NetworkManager.conf
+cat /etc/network/interfaces
+ls /etc/netplan/
+ls
+ls /etc/networks
+ls /etc/network/
+ip -a
+ip ad
+mv /etc/systemd/network/ethernet.network /home/pmarkus/systemd-network
+ls /home/pmarkus/systemd-network
+reboot
+systemctl list-units | grep network
+systemctl list-units | grep -i network
+nmcli
+sudo nmcli dev set enp14s0 managed yes
+sudo nmcli dev set enxf8e43b7419ee managed yes
+sudo nmcli dev set wlp13s0 managed yes
+sudo systemctl restart NetworkManger
+sudo systemctl restart NetworkManager
+nmcli
+sudo nmcli dev set enxf8e43b7419ee managed yes
+nmcli
+cat /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf
+ls /etc/NetworkManager/conf.d/
+touch /etc/NetworkManager/conf.d/10-globally-managed-devices.conf
+ls /usr/lib/NetworkManager/conf.d/10-globally-managed-devices.conf
+cat /usr/lib/NetworkManager/conf.d/10-globally-managed-devices.conf
+rm /etc/NetworkManager/conf.d/10-globally-managed-devices.conf
+mv /usr/lib/NetworkManager/conf.d/10-globally-managed-devices.conf /usr/lib/NetworkManager/conf.d/10-globally-managed-devices.conf_orig
+touch /usr/lib/NetworkManager/conf.d/10-globally-managed-devices.conf
+systemctl restart NetworkManager
+exit
+update-initramfs -u -k all
+cp /boot/initrd.img-6.14.0-29-generic /efi
+reboot
+systemd list-units | grep -i network
+systemctl list-units | grep -i network
+systemctl disable sysmd-networkd-wait-online
+systemctl disable systemd-networkd-wait-online
+systemctl disable network-online
+system-analyze
+apt install system-analyze
+
+systemctl list-dependecies systemd-networkd-wait-online
+systemctl list-dependencies systemd-networkd-wait-online
+sudo systemctl mask systemd-networkd-wait-online
+reboot
+systemctl start sddm.service
+systemctl status sddm.service
+systemctl status default.target
+systemctl edit sddm
+journalctl --unit sddm.service
+
+dmesg | less
+dpkg -l | grep nvidia
+sudo nvidia-uninstall
+apt install nvidia-uninsta
+dpkg -l | grep nvidia-driver
+sudo apt remove --purge nvidia-driver-570-server
+apt install nvidia-open
+apt install nvidia-open-580
+apt update
+apt autoremove
+apt install nvidia-open-580
+sudo ubuntu-drivers list
+sudo ubuntu-drivers install nvidia-driver-570-open
+sudo ubuntu-drivers remove nvidia-driver-570-open
+sudo ubuntu-drivers -h
+sudo ubuntu-drivers install nvidia-driver-570-open
+sudo ubuntu-drivers install nvidia:570-open
+history | grep initram
+update-initramfs -u -k all
+cp /boot/initrd.img-6.14.0-29-generic /efi
+reboot
+echo $0
+ecls /bin/bash
+ls
+ls /
+ls /bin | grep bash
+chsh pmarkus -s /usr/bin/bash
+exit
+cd /mnt/linux-setup-scripts
+ls /mnt
+cd /mnt
+ls
+cd linux-setup-scripts
+groups
+usermod -a G pmarkus root
+usermod -a -G pmarkus root
+groups
+usermod -a -G root pmarkus
+groups
+exit
+groups
+cd /mnt
+cd linux-setup-scripts
+ls -l linux-setup-scripts
+exit
+usermod -a -G fuse root
+fusermount3 -u /mnt/linux-setup-scripts
+exit
+cd /mnt/linux-setup-scripts/
+ls
+./snapshot_history.sh
+rm -rf /home/root/repos/
+exit
+micro ~/.bash_history
+exit
+ls
+cd /mnt/linux-setup-scripts
+ls -l /mhnt
+ls -l /mnt
+exit
+usermod -a -G pmarkus root
+groups
+cd /mnt/linux-setup-scripts
+exit
+ls /root
+ls
+cd ~
+ls
+cd /
+ls
+cd root
+ls
+exit
+ls
+ls -ah
+exit

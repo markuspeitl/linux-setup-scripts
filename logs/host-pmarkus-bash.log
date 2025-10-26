@@ -1,0 +1,194 @@
+exit
+ls
+cd /scripts
+ls
+sudo mkdir -p /mnt/linux-setup-scripts
+ping <redacted_ip>
+sshfs -p <redacted-port> pmarkus@<redacted_ip>:~/repos/linux-setup-scripts /mnt/linux-setup-scripts/
+sudo chmod 777 /mnt/linux-setup-scripts
+sshfs -p <redacted-port> pmarkus@<redacted_ip>:~/repos/linux-setup-scripts /mnt/linux-setup-scripts/
+cd /mnt/linux-setup-scripts
+ls
+sshfs -p <redacted-port> pmarkus@<redacted_ip>:/home/pmarkus/repos/linux-setup-scripts /mnt/linux-setup-scripts/
+ls
+cd ..
+cd linux-setup-scripts/
+ls
+sudo -i
+groups
+sudo -i
+sudo ./snapshot_history.sh
+sudo chmod +x ./snapshot_history.sh
+sudo -i
+cd ..
+fusermount3 -u /mnt/linux-setup-scripts
+sshfs -o allow_other -p <redacted-port> pmarkus@<redacted_ip>:/home/pmarkus/repos/linux-setup-scripts /mnt/linux-setup-scripts/
+micro /etc/fuse.conf
+sshfs -o allow_other -p <redacted-port> pmarkus@<redacted_ip>:/home/pmarkus/repos/linux-setup-scripts /mnt/linux-setup-scripts/
+sudo -i
+cd linux-setup-scripts/
+sudo bash ./snapshot_history.sh
+cat /home/pmarkus/.bash_history
+echo $0
+cat /home/pmarkus/.bash_history
+groups
+cat /root/.bash_history
+sudo cat /root/.bash_history
+exit
+groups
+cat /home/pmarkus/.bash_history
+sudo /mnt/linux-setup-scripts/snapshot_history.sh
+sudo apt install snapd
+sudo apt update
+sudo apt upgrade
+apt search snap
+apt search snap | grep snap
+sudo apt install snap
+snap install firefox
+exit
+snap -h
+ls /usr/bin/snap
+ls /usr/bin/ | grep snap
+sudo apt remove --purge snap
+micro /etc/apt/preferences.d/ignored-packages
+micro /etc/fstab
+flatpak
+sudo apt install flatpak
+flatpak seach firefox
+flatpak search firefox
+sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+exit
+nvidia-smi
+ubuntu-drivers -h
+ubuntu-drivers list
+lspci -k | grep amd
+sudo apt install nvidia-prime
+nvidia-prime -h
+prime -h
+ls /usr/bin | grep prime
+prime-select -h
+prime-select query
+glgears
+glxgears
+glxdemo
+glxinfo
+sudo lspci | less
+glxinfo -B | less
+flatpak search flatseal | grep flatseal
+flatpak search flatseal
+flatpak install com.github.tchx84.Flatseal
+flatpak install com.heroicgameslauncher.hgl
+flatpak install com.obsproject.Studio
+flatpak install com.rawtherapee.RawTherapee
+flatpak install io.mpv.Mpv
+flatpak install net.lutria.Lutria
+flatpak install net.lutria.Lutris
+flatpak install net.lutris.Lutris
+org.darktable.Darktable
+flatpak install org.darktable.Darktable
+flatpak install org.gimp.GIMP
+flatpak install org.inkscape.Inkscape
+flatpak install org.kde.filelight
+flatpak install org.kde.gwenview
+flatpak install org.kde.krita
+flatpak install org.mozilla.Thunderbird
+flatpak install org.qbittorrent.qBittorrent
+sudo reboot now
+flatpak search fire
+flatpak search firefox | grep firefox
+flatpak install org.mozilla.firefox
+mount
+sudo mkdir /mnt/flatpak
+sudo mount -t btrfs -o subvol=flatpak /dev/mapper/bootsluks /mnt/flatpak
+sudo mount -t btrfs -o subvol=@flatpak /dev/mapper/bootsluks /mnt/flatpak
+cd /mnt
+cd flatpak/
+ls
+tree
+cd ..
+firefox
+flatpak -h
+flatpak list
+flatpak run Firefox
+flatpak run org.mozilla.firefox
+sudo systemctl enable sshd
+exit
+sudo apt update
+sudo apt upgrade
+ls /efi
+ls /boot
+lsblk
+lsblk -f /boot
+lsblk -f /dev/nvme0n1
+ifconfig
+ip addr
+sudo systemctl restart networking
+sudo systemctl restart systemd-networkd
+ip addr
+dhclient -h
+ifdown enp14s0; ifup enp14s0
+nmcli con
+nmcli con down 41da470f-23a7-3c24-8006-41e472d1c0fb
+nmcli con down 41da470f-23a7-3c24-8006-41e472d1c0fb "Wired Connection 1"
+ip addr
+nmcli con
+ifconfig
+ls /etc/ssh/
+cd /etc/ssh/
+micro ssh_config
+systemctl restart sshd
+sudo systemctl restart sshd
+sudo apt install ssh
+sudo systemctl restart sshd
+sudo systemctl enable sshd
+micro ssh_config
+sudo reboot now
+ls
+ip addr
+sudo systemctl enable sshd
+man systemctl
+sudo systemctl list-units | grep ssh
+sudo apt install sshd
+sudo apt install openssh-server
+sudo systemctl start sshd
+sudo systemctl enable --now ssh
+sudo systemctl enable ssh
+ls
+micro ~/.bash_history
+micro .bashrc
+micro ~/.bash_history
+micro ~/.profile
+cd .ssh
+ls
+cd ..
+sudo -i
+sshfs -p <redacted-port> pmarkus@<redacted_ip>:/home/pmarkus/repos/linux-setup-scripts /mnt/linux-setup-scripts
+ls
+ls /
+cd /scripts
+ls
+cd ..
+sshfs -p <redacted-port> pmarkus@<redacted_ip>:/home/pmarkus/repos/linux-setup-scripts /scripts
+ls /mnt
+cd /mnt/linux-setup-scripts
+ls
+cd ..
+sshfs -p <redacted-port> pmarkus@<redacted_ip>:/home/pmarkus/repos/linux-setup-scripts /mnt/linux-setup-scripts
+ssh -p <redacted-port> pmarkus@<redacted_ip>
+ssh -p <redacted-port> pmarkus@<redacted_ip>
+sshfs -p <redacted-port> pmarkus@<redacted_ip>:/home/pmarkus/repos/linux-setup-scripts /mnt/linux-setup-scripts
+cd linux-setup-scripts
+ls
+./snapshot_history.sh
+sudo -i
+ls -al /mnt
+sudo -i
+ls
+sudo ./snapshot_history.sh
+sudo snapshot_history.sh
+sudo ./snapshot_history.sh
+sudo bash ./snapshot_history.sh
+sudo bash snapshot_history.sh
+ls -al
+sudo -i
+sudo reboot now
