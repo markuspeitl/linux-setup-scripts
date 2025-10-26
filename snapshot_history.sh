@@ -16,22 +16,14 @@ fi
 
 mkdir -p "$history_logs_dir"
 
-file_timestamp=$(date +%Y-%m-%d_%Hh-%Mm-%Ss)
+if [ -z "$no_timestamp" ]; then
+    file_timestamp=$(date +%d-%m-%Y_%Hh-%Mm-%Ss)
+fi
 
 function snap_history(){
     src_home_dir="$1"
     target_file="$2"
-
-    history_file="$src_home_dir/.bash_history"
-    if [ -f "$history_file" ]; then
-        echo "Snapping history from '$history_file' to '$history_logs_dir/$target_file-bash-$file_timestamp.log'"
-        cat "$history_file" > "$history_logs_dir/$target_file-bash-$file_timestamp.log"
-    fi
-    history_file="$src_home_dir/.zsh_history"
-    if [ -f "$history_file" ]; then
-        echo "Snapping history from '$history_file' to '$history_logs_dir/$target_file-zsh-$file_timestamp.log'"
-        cat "$history_file" > "$history_logs_dir/$target_file-zsh-$file_timestamp.log"
-    fi
+    file_timestamp=$file_timestamp bash ./snap_history.sh "$src_home_dir" "$target_file" "$history_logs_dir"
 }
 
 chroot_users=$(ls "/home")

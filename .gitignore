@@ -1,2 +1,4 @@
 simulated_disk*
 *.pyc
+efi-snapshot*
+boot-snapshot*

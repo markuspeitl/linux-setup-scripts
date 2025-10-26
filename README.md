@@ -205,3 +205,9 @@ pm2 start --name linux-setup-scripts-99 "http-server /home/<user>/linux-setup-sc
 # test publicly accessible
 curl http://devswarm.com:99/README.md
 ```
+
+
+# Common commands:
+```sh
+no_timestamp=true ./snapshot_history.sh
+```
