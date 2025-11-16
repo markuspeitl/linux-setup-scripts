@@ -212,3 +212,16 @@ sudo -i
 cp utils/extract-archive-dir.sh /tmp
 sudo -i
 sudo reboot now
+ls
+exit
+sudo systemctl status sshd
+ip addr
+sudo micro /etc/ssh/ssh_config
+sudo systemctl restart sshd
+sudo micro /etc/ssh/ssh_config
+sudo systemctl restart sshd
+sudo systemctl restart ssh
+sudo micro /etc/ssh/ssh_config
+netstat -ltnu
+sudo apt install netstat
+sudo reboot now

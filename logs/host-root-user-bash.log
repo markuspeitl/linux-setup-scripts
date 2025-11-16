@@ -500,3 +500,42 @@ ls
 du 09dd90de2f2c4feb96aad43c70b0c4fd/6.14.0-29-generic/initrd.img-6.14.0-29-generic
 du initrd.img-6.14.0-29-generic
 reboot
+cd /efi
+ls
+rm initrd.img-6.14.0-29-generic
+rm vmlinuz-6.14.0-29-generic
+reboot
+cd /efi
+ls
+cat loader/entries/kubuntu-luks-edge.conf
+cp /boot/initrd.img-6.14.0-29-generic .
+cp /boot/vmlinuz-6.14.0-29-generic .
+ls
+rm /boot/loader/entries/boot-abs-kubuntu-luks-edge.conf
+micro /boot/loader/entries/09dd90de2f2c4feb96aad43c70b0c4fd-6.14.0-33-generic.conf
+history | less
+update-initramfs -u -kinitra
+update-initramfs -u -k
+history | grep update-initram
+update-initramfs -u -k all
+cd /boot
+ls
+ls -al
+reboot
+history | grep nvidia
+history | grep init
+exit
+find /etc -type f "*nvidia*"
+find /etc "*nvidia*" -type f
+find / "*nvidia*" -type f
+find / *nvidia*
+find / *nvidia* | grep nvidia
+history | grep crypt
+lsblk
+cryptsetup luksAddKey /dev/nvme0n1p3
+reboot
+cryptsetup luksDump /dev/nvme0n1p3
+cryptsetup luksRemoveKey /dev/nvme0n1p3 0
+cryptsetup luksRemoveKey /dev/nvme0n1p3
+cryptsetup luksDump /dev/nvme0n1p3
+reboot
