@@ -1,0 +1,21 @@
+kubuntu-desktop
+systemd-boot
+arch-install-scripts
+tree
+cryptsetup cryptsetup-initramfs
+ifconfig
+system-analyze
+# ubuntu-drivers install nvidia:570-open
+net-tools
+rsync
+git
+code
+wget gpg curl
+tee
+apt-transport-https
+apt-transport-https
+apt-transport-https
+code
+zsh
+python3
+python3-pip

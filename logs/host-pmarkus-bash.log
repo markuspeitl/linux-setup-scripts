@@ -225,3 +225,67 @@ sudo micro /etc/ssh/ssh_config
 netstat -ltnu
 sudo apt install netstat
 sudo reboot now
+sudo micro /etc/ssh/sshd_config
+sudo micro /etc/ssh/ssh_config
+sudo systemctl restart sshd
+sudo systemctl restart ssh
+ipconfig
+ls
+ls /
+sudo micro /etc/ssh/sshd_config
+sudo systemctl daemon-reload
+sudo systemctl restart ssh.socket
+sudo systemctl restart ssh.service
+history | grep sshfs
+cd /scripts
+ls
+ls -a
+cd /mnt/linux-setup-scripts
+ls
+no_timestamp=true ./snapshot_history.sh
+sudo apt install net-tools
+sudo apt update
+sudo apt upgrade
+netstat -ltnu
+sudo apt install rsync
+sudo micro /etc/kernel/postinst.d/zz-systemd-boot
+sudo micro /etc/kernel/postinst.d/zz-update-grub
+sudo micro /etc/kernel-img.conf
+sudo apt update
+sudo apt upgrade
+sudo micro ~/.bash_aliases
+source ~/.bash_aliases
+aptin git
+sudo micro ~/.bash_aliases
+ls ~/.ssh
+rm ~/.ssh/known_hosts.old
+rsync -avz -e 'ssh -p <port-redacted>' --exclude 'known_hosts' pmarkus@<ip-redacted>:/home/pmarkus/.ssh/* ~/.ssh
+rsync -avz erazer:/home/pmarkus/.gitconfig* ~
+ls
+ls ~
+ls -a ~
+cd ~
+ls
+mkdir repos
+cd repos
+git clone git@github.com:markuspeitl/linux-setup-scripts.git
+ls
+cd linux-setup-scripts/
+ls
+apin code
+source ~/.bash_aliases
+apin code
+apin wget gpg curl
+cd ..
+ls
+ls -a
+apin zsh
+chsh -s $(which zsh)
+history | grep rsync
+cd /mnt/linux-setup-scripts/
+no_timestamp=true ./snapshot_history.sh
+history > logs/host-pmarkus-bash.log
+rsync -avz erazer:/home/pmarkus/.profile ~
+rsync -avz erazer:/home/pmarkus/.bashrc ~
+rsync -avz erazer:/home/pmarkus/.zshrc ~
+rsync -avz erazer:/home/pmarkus/.oh-my-zsh ~
