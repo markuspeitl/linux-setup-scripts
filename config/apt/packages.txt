@@ -23,6 +23,15 @@ fzf
 ripgrep
 autojump
 steam-installer
+xclip
 qimgv
 dotnet-sdk-8.0
 # nvidia-driver-libs:i386
+borgbackup
+shutter
+btop
+cifs-utils
+# For resolving DNS from command line using the `dig` command
+dnsutils
+# Requires docker signing key to be installed and apt source to be setup
+docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
