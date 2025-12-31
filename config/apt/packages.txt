@@ -34,4 +34,7 @@ cifs-utils
 # For resolving DNS from command line using the `dig` command
 dnsutils
 # Requires docker signing key to be installed and apt source to be setup
-docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-pluginpython3-full
+rsync
+btrfs-compsize
+gh
