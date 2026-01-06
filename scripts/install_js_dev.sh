@@ -22,6 +22,9 @@ else
     echo "NVM already installed in $shell_profile, skipping installation."
 fi
 
+nvm install --lts;
+nvm use --lts;
+
 # ------------------- BUN --------------------------------------------------------
 
 has_bun=$(cat "$shell_profile" | grep 'PATH="$HOME/.bun/bin:$PATH"')
