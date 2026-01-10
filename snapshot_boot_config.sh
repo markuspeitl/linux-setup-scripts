@@ -61,3 +61,6 @@ config_match_regex=".+\.(conf|config)$"
 
 copy_found_archive "$efi_dir" "$efi_mirror_dir" ".+\.(conf|config)$"
 copy_found_archive "$boot_dir" "$boot_mirror_dir" "$config_match_regex"
+
+copy_config_file "$boot_dir/loader/gen_with_template.sh" "$boot_dir/loader" "$boot_mirror_dir/loader"
+copy_config_file "$boot_dir/loader/template.conf" "$boot_dir/loader" "$boot_mirror_dir/loader"
