@@ -36,5 +36,8 @@ dnsutils
 # Requires docker signing key to be installed and apt source to be setup
 docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-pluginpython3-full
 rsync
-btrfs-compsize
-gh
+btrfs-compsize # compare real vs compressed size of files
+gh # github cli
+smartmontools # ssd and harddrive health `smartctl -a /dev/sdd`, `smartctl -x /dev/sdd`
+# dkms
+# firefox-devedition
